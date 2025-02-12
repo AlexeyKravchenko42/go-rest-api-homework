@@ -57,8 +57,6 @@ func getTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTask(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Println("Произошел запрос таски")
 	id := chi.URLParam(r, "id")
 
 	task, ok := tasks[id]
@@ -100,11 +98,7 @@ func postTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteTask(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Println("Зашли в deleteTask")
 	id := chi.URLParam(r, "id")
-
-	fmt.Println("id получили")
 
 	task, ok := tasks[id]
 	if !ok {
@@ -112,7 +106,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("id проверили")
+	delete(tasks, id)
 
 	resp, err := json.Marshal(task)
 	if err != nil {
@@ -120,17 +114,9 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("ответ создали")
-
-	delete(tasks, id)
-
-	fmt.Println("таску удалили")
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(resp)
-
-	fmt.Println("ответ вернули")
 }
 
 func main() {
